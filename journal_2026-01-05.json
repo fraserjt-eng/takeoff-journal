@@ -1,0 +1,229 @@
+{
+  "date": "2026-01-05",
+  "dayOfWeek": "Monday",
+  "weekNumber": "2",
+  "quarter": "1",
+  "timestamp": "2026-01-05T13:53:33.435Z",
+  "todayMessage": "Taking off starts with being present. Let go of the control. You know who actually controls. Just act, while being here. ",
+  "goals": [
+    "Get the week and month set",
+    "Catch up of the list",
+    "Connect with people "
+  ],
+  "tasks": [
+    {
+      "text": "",
+      "completed": true
+    },
+    {
+      "text": "",
+      "completed": true
+    },
+    {
+      "text": "",
+      "completed": true
+    }
+  ],
+  "reachOut": [
+    "Olivia",
+    "Sarah ",
+    "Leads "
+  ],
+  "prompts": [
+    {
+      "prompt": "One thing I can get excited about today is...",
+      "response": "How wide open my day is. Nothing is keeping me attached today but me "
+    },
+    {
+      "prompt": "A positive phrase or sentence I can say to myself several times today is...",
+      "response": "Are you here, right now? "
+    },
+    {
+      "prompt": "Someone who needs me on my A-game today is...",
+      "response": "The universe "
+    },
+    {
+      "prompt": "A situation that might stress me out or trip me up today could be...",
+      "response": "Principals needing me "
+    },
+    {
+      "prompt": "...and the way that my best self would deal with that is...",
+      "response": "Stay present and do it. You have all the \"time\" in the world "
+    },
+    {
+      "prompt": "Someone I could surprise with a note, gift, or sign of appreciation is...",
+      "response": "AS"
+    },
+    {
+      "prompt": "One action I could take today to demonstrate excellence or real value is...",
+      "response": "Completion, action and follow through on tasks - seems small, but so important for the energy shift needed for takeoff "
+    },
+    {
+      "prompt": "One bold action I could take today is...",
+      "response": "Today is not a bold day - but I would say the circle process weekly problem solving to possibility "
+    },
+    {
+      "prompt": "If I was my own high performance coach, I would tell myself this today...",
+      "response": "Stay present, be being :) "
+    },
+    {
+      "prompt": "I would complete this day proud of my efforts if I make sure I...",
+      "response": "Connect with the people above and follow through on the list of fun and managing type stuff "
+    },
+    {
+      "prompt": "The big picture I have to keep in mind today is that I am working steadily towards...",
+      "response": "All of my work today, the thoughts, actions, products, and connections are fueling the Interior Architect of Transformation. "
+    }
+  ],
+  "schedule": [
+    {
+      "time": "06:00",
+      "activity": "Sweat, Stretch and Ready ",
+      "domain": "health"
+    },
+    {
+      "time": "07:30",
+      "activity": "Journal and List of tasks ",
+      "domain": "career"
+    },
+    {
+      "time": "08:00",
+      "activity": "Tasks ",
+      "domain": "creative"
+    },
+    {
+      "time": "08:30",
+      "activity": "Tasks",
+      "domain": "career"
+    },
+    {
+      "time": "09:00",
+      "activity": "Person 1 - Sarah ",
+      "domain": "career"
+    },
+    {
+      "time": "09:30",
+      "activity": "Snap wife ",
+      "domain": "love"
+    },
+    {
+      "time": "10:00",
+      "activity": "Person 2 - Olivia ",
+      "domain": "career"
+    },
+    {
+      "time": "11:00",
+      "activity": "Group 3 - Leads ",
+      "domain": "career"
+    },
+    {
+      "time": "11:30",
+      "activity": "Snap Wife ",
+      "domain": "love"
+    },
+    {
+      "time": "12:00",
+      "activity": "Task",
+      "domain": "creative"
+    },
+    {
+      "time": "14:00",
+      "activity": "Finances - Problem to possibility - short term ",
+      "domain": "money"
+    },
+    {
+      "time": "14:30",
+      "activity": "Finances - Long term ",
+      "domain": "money"
+    },
+    {
+      "time": "15:00",
+      "activity": "Finances - Long Term ",
+      "domain": "money"
+    },
+    {
+      "time": "15:30",
+      "activity": "Home ",
+      "domain": ""
+    },
+    {
+      "time": "16:00",
+      "activity": "Work out ",
+      "domain": "health"
+    },
+    {
+      "time": "16:30",
+      "activity": "Work out ",
+      "domain": "health"
+    },
+    {
+      "time": "17:00",
+      "activity": "Dinner ",
+      "domain": "health"
+    },
+    {
+      "time": "17:30",
+      "activity": "Sweat ",
+      "domain": "health"
+    },
+    {
+      "time": "18:00",
+      "activity": "Stretch ",
+      "domain": "health"
+    },
+    {
+      "time": "18:30",
+      "activity": "Recap, Relax ",
+      "domain": "inner"
+    },
+    {
+      "time": "19:00",
+      "activity": "Kids ",
+      "domain": "love"
+    }
+  ],
+  "habits": {
+    "clarity": 8,
+    "energy": 8,
+    "necessity": 7,
+    "productivity": 9,
+    "influence": 5,
+    "courage": 9,
+    "overall": 7.7
+  },
+  "domains": {
+    "money": {
+      "progress": false,
+      "notes": ""
+    },
+    "health": {
+      "progress": true,
+      "notes": ""
+    },
+    "career": {
+      "progress": true,
+      "notes": ""
+    },
+    "creative": {
+      "progress": true,
+      "notes": ""
+    },
+    "love": {
+      "progress": true,
+      "notes": ""
+    },
+    "inner": {
+      "progress": true,
+      "notes": ""
+    }
+  },
+  "pathAllocation": 50,
+  "wins": [
+    "Tasks complete",
+    "Short term financed done",
+    "Shipped one idea"
+  ],
+  "improvement": "TBD ",
+  "gratitude": "I am grateful for now ",
+  "tomorrowPriority": "Ship"
+}

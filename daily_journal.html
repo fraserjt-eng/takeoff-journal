@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TAKEOFF Daily Journal</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="High Performance Daily Journaling System - Track your progress toward your 2026 Vision Board goals">
+    <meta name="theme-color" content="#d4a853">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TAKEOFF">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- App Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
+    <link rel="apple-touch-icon" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192.png">
+
+    <!-- Splash Screens for iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <style>
+        :root {
+            --bg-primary: #0a1628;
+            --bg-secondary: #1a2940;
+            --bg-tertiary: #243552;
+            --accent-gold: #d4a853;
+            --accent-teal: #14b8a6;
+            --accent-coral: #f97316;
+            --accent-purple: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --status-success: #22c55e;
+            --status-warning: #eab308;
+            --status-danger: #ef4444;
+            --status-info: #3b82f6;
+            --domain-money: #d4a853;
+            --domain-health: #14b8a6;
+            --domain-career: #f97316;
+            --domain-creative: #8b5cf6;
+            --domain-love: #ec4899;
+            --domain-inner: #06b6d4;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .date-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .date-badge {
+            background: var(--bg-tertiary);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .date-badge span {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--bg-tertiary);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-toggle {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .section.collapsed .section-content {
+            display: none;
+        }
+
+        .section.collapsed .section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Grid Layouts */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .card-title {
+            color: var(--accent-gold);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Morning Mindset Prompts */
+        .prompt-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .prompt-card:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .prompt-header {
+            padding: 15px 20px;
+            background: rgba(20, 184, 166, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-number {
+            background: var(--accent-teal);
+            color: var(--bg-primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 12px;
+        }
+
+        .prompt-text {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .prompt-body {
+            padding: 15px 20px;
+            display: none;
+        }
+
+        .prompt-card.expanded .prompt-body {
+            display: block;
+        }
+
+        /* Daily Schedule */
+        .schedule-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .schedule-time {
+            color: var(--accent-gold);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .schedule-activity input {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+
+        .schedule-domain select {
+            font-size: 0.85rem;
+            padding: 8px 10px;
+        }
+
+        /* Habit Scores */
+        .habit-slider-container {
+            margin-bottom: 25px;
+        }
+
+        .habit-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .habit-name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .habit-value {
+            font-weight: bold;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .habit-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .habit-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: var(--transition);
+        }
+
+        .habit-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .habit-slider.low::-webkit-slider-thumb { background: var(--status-danger); }
+        .habit-slider.medium::-webkit-slider-thumb { background: var(--status-warning); }
+        .habit-slider.high::-webkit-slider-thumb { background: var(--status-success); }
+        .habit-slider.exceptional::-webkit-slider-thumb { background: var(--accent-gold); }
+
+        .overall-score {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--accent-gold);
+        }
+
+        .overall-score-value {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .overall-score-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        /* Vision Board Check-in */
+        .domain-check {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .domain-icon {
+            font-size: 1.8rem;
+            width: 50px;
+            text-align: center;
+        }
+
+        .domain-info {
+            flex: 1;
+        }
+
+        .domain-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .domain-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            border-radius: 26px;
+            transition: var(--transition);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--status-success);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background: white;
+        }
+
+        .domain-notes {
+            margin-top: 10px;
+        }
+
+        .domain-notes input {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+
+        /* Path Allocation */
+        .path-allocation {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius);
+        }
+
+        .path-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .path-a { color: var(--accent-purple); font-weight: 600; }
+        .path-b { color: var(--accent-teal); font-weight: 600; }
+
+        .path-slider {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-teal) 100%);
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .path-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .path-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+
+        /* Evening Reflection */
+        .wins-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .win-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .win-number {
+            background: var(--status-success);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: #e5b95f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--status-danger);
+            border: 1px solid var(--status-danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--status-danger);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+        }
+
+        .footer-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-info {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .modal h3 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--status-success);
+            border-radius: 8px;
+            color: var(--text-primary);
+            transform: translateX(150%);
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            border-color: var(--status-danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .schedule-row {
+                grid-template-columns: 70px 1fr;
+            }
+
+            .schedule-domain {
+                grid-column: span 2;
+            }
+
+            .grid-3, .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Checkbox styling */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-gold);
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        /* Yesterday's Reflection Banner */
+        .yesterday-banner {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--bg-secondary) 100%);
+            padding: 20px;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        .yesterday-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .yesterday-icon {
+            font-size: 2.5rem;
+        }
+
+        .yesterday-text {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .yesterday-text strong {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .yesterday-text p {
+            color: var(--text-secondary);
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .yesterday-banner .btn {
+            padding: 10px 20px;
+        }
+
+        /* Yesterday Modal */
+        .yesterday-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .yesterday-modal.active {
+            display: flex;
+        }
+
+        .yesterday-modal-content {
+            background: var(--bg-secondary);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            width: 100%;
+            border: 2px solid var(--accent-purple);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .yesterday-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .yesterday-modal-header h2 {
+            color: var(--accent-purple);
+            flex: 1;
+        }
+
+        .yesterday-modal-header .date-label {
+            background: var(--accent-purple);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .yesterday-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .yesterday-banner .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>TAKEOFF DAILY JOURNAL</h1>
+        <p class="subtitle">"The becoming is the point."</p>
+        <div class="date-info">
+            <div class="date-badge">
+                <span id="currentDate"></span>
+            </div>
+            <div class="date-badge">
+                Week <span id="weekNumber"></span>
+            </div>
+            <div class="date-badge">
+                Q<span id="quarterNumber"></span> 2026
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text"><span id="progressPercent">0</span>% Complete</div>
+    </div>
+
+    <!-- Yesterday's Reflection Banner -->
+    <div class="yesterday-banner" id="yesterdayBanner" style="display: none;">
+        <div class="yesterday-content">
+            <span class="yesterday-icon">🌙</span>
+            <div class="yesterday-text">
+                <strong>Complete Yesterday's Evening Reflection</strong>
+                <p>You have an unfinished reflection from <span id="yesterdayDate"></span></p>
+            </div>
+            <button class="btn btn-primary" onclick="openYesterdayModal()">Complete Now</button>
+            <button class="btn btn-secondary" onclick="dismissYesterday()">Skip</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Section 1: Performance Snapshot -->
+        <section class="section" id="section-snapshot">
+            <div class="section-header" onclick="toggleSection('section-snapshot')">
+                <h2 class="section-title">TODAY'S PERFORMANCE SNAPSHOT</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="form-group">
+                    <label>TODAY'S MESSAGE TO MYSELF</label>
+                    <textarea id="todayMessage" placeholder="Write a powerful message to yourself for today..." rows="3"></textarea>
+                </div>
+                <div class="grid-3">
+                    <div class="card">
+                        <h3 class="card-title">TOP 3 GOALS</h3>
+                        <div class="form-group">
+                            <input type="text" id="goal1" placeholder="1. Most important goal">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="goal2" placeholder="2. Second priority">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="goal3" placeholder="3. Third priority">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">MUST-DO TASKS</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task1Check">
+                            <input type="text" id="task1" placeholder="Critical task 1" style="flex:1">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task2Check">
+                            <input type="text" id="task2" placeholder="Critical task 2" style="flex:1">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task3Check">
+                            <input type="text" id="task3" placeholder="Critical task 3" style="flex:1">
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">REACH OUT TO</h3>
+                        <div class="form-group">
+                            <input type="text" id="reachOut1" placeholder="Person 1">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="reachOut2" placeholder="Person 2">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="reachOut3" placeholder="Person 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Morning Mindset -->
+        <section class="section" id="section-mindset">
+            <div class="section-header" onclick="toggleSection('section-mindset')">
+                <h2 class="section-title">MORNING MINDSET</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div id="promptsContainer"></div>
+            </div>
+        </section>
+
+        <!-- Section 3: Daily Schedule -->
+        <section class="section" id="section-schedule">
+            <div class="section-header" onclick="toggleSection('section-schedule')">
+                <h2 class="section-title">DAILY SCHEDULE</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="schedule-container" id="scheduleContainer"></div>
+            </div>
+        </section>
+
+        <!-- Section 4: Habit Scores -->
+        <section class="section" id="section-habits">
+            <div class="section-header" onclick="toggleSection('section-habits')">
+                <h2 class="section-title">HIGH PERFORMANCE HABIT SCORES</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="grid-2">
+                    <div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">CLARITY</span>
+                                <span class="habit-value" id="clarityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="clarity" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I know my goals and priorities today?</small>
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">ENERGY</span>
+                                <span class="habit-value" id="energyValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="energy" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I manage my energy and take care of my body?</small>
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">NECESSITY</span>
+                                <span class="habit-value" id="necessityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="necessity" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I feel urgency and importance in my work?</small>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">PRODUCTIVITY</span>
+                                <span class="habit-value" id="productivityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="productivity" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I focus on high-impact activities?</small>
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">INFLUENCE</span>
+                                <span class="habit-value" id="influenceValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="influence" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I positively influence others today?</small>
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">COURAGE</span>
+                                <span class="habit-value" id="courageValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="courage" min="1" max="10" value="5">
+                            <small style="color: var(--text-muted)">Did I take bold action despite fear or uncertainty?</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="overall-score">
+                    <div class="overall-score-value" id="overallScore">5.0</div>
+                    <div class="overall-score-label">OVERALL PERFORMANCE SCORE</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Vision Board Check-in -->
+        <section class="section" id="section-vision">
+            <div class="section-header" onclick="toggleSection('section-vision')">
+                <h2 class="section-title">VISION BOARD CHECK-IN</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div id="domainChecks"></div>
+                <div class="path-allocation">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 20px; text-align: center;">PATH ALLOCATION TODAY</h3>
+                    <div class="path-labels">
+                        <span class="path-a">PATH A: SHIP IT! (Creative)</span>
+                        <span class="path-b">PATH B: Stability</span>
+                    </div>
+                    <input type="range" class="path-slider" id="pathAllocation" min="0" max="100" value="70">
+                    <div class="path-values">
+                        <span id="pathAValue" style="color: var(--accent-purple)">70%</span>
+                        <span style="color: var(--text-muted)">Target: 70/30</span>
+                        <span id="pathBValue" style="color: var(--accent-teal)">30%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Evening Reflection -->
+        <section class="section" id="section-evening">
+            <div class="section-header" onclick="toggleSection('section-evening')">
+                <h2 class="section-title">EVENING REFLECTION</h2>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 class="card-title">3 WINS FROM TODAY</h3>
+                        <div class="wins-container">
+                            <div class="win-input">
+                                <span class="win-number">1</span>
+                                <input type="text" id="win1" placeholder="First win...">
+                            </div>
+                            <div class="win-input">
+                                <span class="win-number">2</span>
+                                <input type="text" id="win2" placeholder="Second win...">
+                            </div>
+                            <div class="win-input">
+                                <span class="win-number">3</span>
+                                <input type="text" id="win3" placeholder="Third win...">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom: 20px;">
+                            <h3 class="card-title">IMPROVEMENT AREA</h3>
+                            <input type="text" id="improvement" placeholder="One thing I could have done better...">
+                        </div>
+                        <div class="card" style="margin-bottom: 20px;">
+                            <h3 class="card-title">GRATITUDE</h3>
+                            <input type="text" id="gratitude" placeholder="What I'm grateful for today...">
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">TOMORROW'S #1 PRIORITY</h3>
+                            <input type="text" id="tomorrowPriority" placeholder="The most important thing for tomorrow...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-buttons">
+                <button class="btn btn-primary" onclick="submitToSpreadsheet()">
+                    Submit to Spreadsheet
+                </button>
+                <button class="btn btn-secondary" onclick="saveDraft()">
+                    Save Draft
+                </button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()">
+                    Copy to Clipboard
+                </button>
+                <button class="btn btn-secondary" onclick="downloadJSON()">
+                    Download JSON
+                </button>
+                <button class="btn btn-danger" onclick="clearForm()">
+                    Clear Form
+                </button>
+                <button class="btn btn-secondary" onclick="openSettings()">
+                    Settings
+                </button>
+            </div>
+            <div class="footer-info">
+                <p>Last saved: <span id="lastSaved">Never</span></p>
+                <p style="margin-top: 10px; color: var(--accent-gold);">Joshua Fraser, Ed.D. | TAKEOFF 2026</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h3>Settings</h3>
+            <div class="form-group">
+                <label>Google Apps Script Web App URL</label>
+                <input type="text" id="webAppUrl" placeholder="https://script.google.com/...">
+            </div>
+            <div class="form-group">
+                <label>Auto-save interval (seconds)</label>
+                <input type="number" id="autoSaveInterval" value="30" min="10" max="300">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Yesterday's Reflection Modal -->
+    <div class="yesterday-modal" id="yesterdayModal">
+        <div class="yesterday-modal-content">
+            <div class="yesterday-modal-header">
+                <span style="font-size: 2rem;">🌙</span>
+                <h2>Yesterday's Evening Reflection</h2>
+                <span class="date-label" id="yesterdayModalDate"></span>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="card-title">3 WINS FROM YESTERDAY</h3>
+                    <div class="wins-container">
+                        <div class="win-input">
+                            <span class="win-number">1</span>
+                            <input type="text" id="yWin1" placeholder="First win...">
+                        </div>
+                        <div class="win-input">
+                            <span class="win-number">2</span>
+                            <input type="text" id="yWin2" placeholder="Second win...">
+                        </div>
+                        <div class="win-input">
+                            <span class="win-number">3</span>
+                            <input type="text" id="yWin3" placeholder="Third win...">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 class="card-title">IMPROVEMENT AREA</h3>
+                        <input type="text" id="yImprovement" placeholder="One thing I could have done better...">
+                    </div>
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 class="card-title">GRATITUDE</h3>
+                        <input type="text" id="yGratitude" placeholder="What I was grateful for yesterday...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3 class="card-title">HABIT SCORES FOR YESTERDAY</h3>
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">CLARITY</span>
+                                <span class="habit-value" id="yClarityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yClarity" min="1" max="10" value="5">
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">ENERGY</span>
+                                <span class="habit-value" id="yEnergyValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yEnergy" min="1" max="10" value="5">
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">NECESSITY</span>
+                                <span class="habit-value" id="yNecessityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yNecessity" min="1" max="10" value="5">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">PRODUCTIVITY</span>
+                                <span class="habit-value" id="yProductivityValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yProductivity" min="1" max="10" value="5">
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">INFLUENCE</span>
+                                <span class="habit-value" id="yInfluenceValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yInfluence" min="1" max="10" value="5">
+                        </div>
+                        <div class="habit-slider-container">
+                            <div class="habit-label">
+                                <span class="habit-name">COURAGE</span>
+                                <span class="habit-value" id="yCourageValue">5</span>
+                            </div>
+                            <input type="range" class="habit-slider" id="yCourage" min="1" max="10" value="5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-buttons" style="margin-top: 25px;">
+                <button class="btn btn-secondary" onclick="closeYesterdayModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitYesterdayReflection()">Submit Yesterday's Reflection</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Morning Mindset Prompts
+        const morningPrompts = [
+            "One thing I can get excited about today is...",
+            "A positive phrase or sentence I can say to myself several times today is...",
+            "Someone who needs me on my A-game today is...",
+            "A situation that might stress me out or trip me up today could be...",
+            "...and the way that my best self would deal with that is...",
+            "Someone I could surprise with a note, gift, or sign of appreciation is...",
+            "One action I could take today to demonstrate excellence or real value is...",
+            "One bold action I could take today is...",
+            "If I was my own high performance coach, I would tell myself this today...",
+            "I would complete this day proud of my efforts if I make sure I...",
+            "The big picture I have to keep in mind today is that I am working steadily towards..."
+        ];
+
+        // Vision Board Domains
+        const domains = [
+            { id: 'money', icon: '💰', name: 'Money & Finance', color: '--domain-money', target: '$15K/month revenue' },
+            { id: 'health', icon: '💪', name: 'Health & Fitness', color: '--domain-health', target: '3x/week training, 185-197 lbs' },
+            { id: 'career', icon: '🎓', name: 'Career/BCCS', color: '--domain-career', target: 'Excellence + Legacy Systems' },
+            { id: 'creative', icon: '✍️', name: 'Creative Ventures', color: '--domain-creative', target: '4 books, 5K followers' },
+            { id: 'love', icon: '❤️', name: 'Love & Relationship', color: '--domain-love', target: '12 date nights, presence' },
+            { id: 'inner', icon: '🧘', name: 'Inner Peace', color: '--domain-inner', target: 'The spiral continues' }
+        ];
+
+        // Initialize date info
+        function initDateInfo() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+
+            // Calculate week number
+            const start = new Date(now.getFullYear(), 0, 1);
+            const diff = now - start;
+            const oneWeek = 1000 * 60 * 60 * 24 * 7;
+            const weekNum = Math.ceil((diff / oneWeek) + 1);
+            document.getElementById('weekNumber').textContent = weekNum;
+
+            // Calculate quarter
+            const quarter = Math.ceil((now.getMonth() + 1) / 3);
+            document.getElementById('quarterNumber').textContent = quarter;
+        }
+
+        // Initialize prompts
+        function initPrompts() {
+            const container = document.getElementById('promptsContainer');
+            morningPrompts.forEach((prompt, index) => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                card.innerHTML = `
+                    <div class="prompt-header" onclick="togglePrompt(${index})">
+                        <div style="display: flex; align-items: center;">
+                            <span class="prompt-number">${index + 1}</span>
+                            <span class="prompt-text">${prompt}</span>
+                        </div>
+                        <span style="color: var(--text-muted);">&#9660;</span>
+                    </div>
+                    <div class="prompt-body">
+                        <textarea id="prompt${index}" placeholder="Your response..." rows="3"></textarea>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Toggle prompt expansion
+        function togglePrompt(index) {
+            const cards = document.querySelectorAll('.prompt-card');
+            cards[index].classList.toggle('expanded');
+        }
+
+        // Initialize schedule
+        function initSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            const domainOptions = domains.map(d => `<option value="${d.id}">${d.icon} ${d.name}</option>`).join('');
+
+            for (let hour = 6; hour <= 21; hour++) {
+                for (let min = 0; min < 60; min += 30) {
+                    const timeStr = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
+                    const ampm = hour < 12 ? 'AM' : 'PM';
+                    const displayHour = hour > 12 ? hour - 12 : hour;
+                    const displayTime = `${displayHour}:${min.toString().padStart(2, '0')} ${ampm}`;
+
+                    const row = document.createElement('div');
+                    row.className = 'schedule-row';
+                    row.innerHTML = `
+                        <span class="schedule-time">${displayTime}</span>
+                        <div class="schedule-activity">
+                            <input type="text" id="schedule_${timeStr}" placeholder="Activity...">
+                        </div>
+                        <div class="schedule-domain">
+                            <select id="domain_${timeStr}">
+                                <option value="">Tag...</option>
+                                ${domainOptions}
+                            </select>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                }
+            }
+        }
+
+        // Initialize domain checks
+        function initDomainChecks() {
+            const container = document.getElementById('domainChecks');
+            domains.forEach(domain => {
+                const check = document.createElement('div');
+                check.className = 'domain-check';
+                check.innerHTML = `
+                    <span class="domain-icon">${domain.icon}</span>
+                    <div class="domain-info">
+                        <div class="domain-name" style="color: var(${domain.color})">${domain.name}</div>
+                        <small style="color: var(--text-muted)">${domain.target}</small>
+                    </div>
+                    <div class="domain-toggle">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">Progress?</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="domain_${domain.id}">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                `;
+
+                const notesDiv = document.createElement('div');
+                notesDiv.className = 'domain-notes';
+                notesDiv.innerHTML = `<input type="text" id="domainNotes_${domain.id}" placeholder="Notes for ${domain.name}...">`;
+                check.appendChild(notesDiv);
+
+                container.appendChild(check);
+            });
+        }
+
+        // Initialize habit sliders
+        function initHabitSliders() {
+            const habits = ['clarity', 'energy', 'necessity', 'productivity', 'influence', 'courage'];
+
+            habits.forEach(habit => {
+                const slider = document.getElementById(habit);
+                const valueDisplay = document.getElementById(habit + 'Value');
+
+                slider.addEventListener('input', function() {
+                    valueDisplay.textContent = this.value;
+                    updateSliderClass(this);
+                    updateOverallScore();
+                });
+
+                updateSliderClass(slider);
+            });
+        }
+
+        function updateSliderClass(slider) {
+            const value = parseInt(slider.value);
+            slider.classList.remove('low', 'medium', 'high', 'exceptional');
+
+            if (value <= 4) slider.classList.add('low');
+            else if (value <= 6) slider.classList.add('medium');
+            else if (value <= 8) slider.classList.add('high');
+            else slider.classList.add('exceptional');
+        }
+
+        function updateOverallScore() {
+            const habits = ['clarity', 'energy', 'necessity', 'productivity', 'influence', 'courage'];
+            let total = 0;
+
+            habits.forEach(habit => {
+                total += parseInt(document.getElementById(habit).value);
+            });
+
+            const average = (total / habits.length).toFixed(1);
+            document.getElementById('overallScore').textContent = average;
+
+            // Update color based on score
+            const scoreElement = document.getElementById('overallScore');
+            if (average <= 4) scoreElement.style.color = 'var(--status-danger)';
+            else if (average <= 6) scoreElement.style.color = 'var(--status-warning)';
+            else if (average <= 8) scoreElement.style.color = 'var(--status-success)';
+            else scoreElement.style.color = 'var(--accent-gold)';
+        }
+
+        // Path allocation slider
+        function initPathSlider() {
+            const slider = document.getElementById('pathAllocation');
+            slider.addEventListener('input', function() {
+                document.getElementById('pathAValue').textContent = this.value + '%';
+                document.getElementById('pathBValue').textContent = (100 - this.value) + '%';
+            });
+        }
+
+        // Toggle section collapse
+        function toggleSection(sectionId) {
+            document.getElementById(sectionId).classList.toggle('collapsed');
+        }
+
+        // Calculate progress
+        function calculateProgress() {
+            const fields = [
+                'todayMessage', 'goal1', 'goal2', 'goal3', 'task1', 'task2', 'task3',
+                'reachOut1', 'reachOut2', 'reachOut3', 'win1', 'win2', 'win3',
+                'improvement', 'gratitude', 'tomorrowPriority'
+            ];
+
+            // Add prompts
+            for (let i = 0; i < 11; i++) {
+                fields.push('prompt' + i);
+            }
+
+            let filled = 0;
+            fields.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && element.value.trim() !== '') {
+                    filled++;
+                }
+            });
+
+            const percentage = Math.round((filled / fields.length) * 100);
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressPercent').textContent = percentage;
+        }
+
+        // Collect all form data
+        function collectFormData() {
+            const data = {
+                date: new Date().toISOString().split('T')[0],
+                dayOfWeek: new Date().toLocaleDateString('en-US', { weekday: 'long' }),
+                weekNumber: document.getElementById('weekNumber').textContent,
+                quarter: document.getElementById('quarterNumber').textContent,
+                timestamp: new Date().toISOString(),
+
+                // Section 1
+                todayMessage: document.getElementById('todayMessage').value,
+                goals: [
+                    document.getElementById('goal1').value,
+                    document.getElementById('goal2').value,
+                    document.getElementById('goal3').value
+                ],
+                tasks: [
+                    { text: document.getElementById('task1').value, completed: document.getElementById('task1Check').checked },
+                    { text: document.getElementById('task2').value, completed: document.getElementById('task2Check').checked },
+                    { text: document.getElementById('task3').value, completed: document.getElementById('task3Check').checked }
+                ],
+                reachOut: [
+                    document.getElementById('reachOut1').value,
+                    document.getElementById('reachOut2').value,
+                    document.getElementById('reachOut3').value
+                ],
+
+                // Section 2 - Prompts
+                prompts: morningPrompts.map((prompt, i) => ({
+                    prompt: prompt,
+                    response: document.getElementById('prompt' + i).value
+                })),
+
+                // Section 3 - Schedule (collect non-empty entries)
+                schedule: [],
+
+                // Section 4 - Habits
+                habits: {
+                    clarity: parseInt(document.getElementById('clarity').value),
+                    energy: parseInt(document.getElementById('energy').value),
+                    necessity: parseInt(document.getElementById('necessity').value),
+                    productivity: parseInt(document.getElementById('productivity').value),
+                    influence: parseInt(document.getElementById('influence').value),
+                    courage: parseInt(document.getElementById('courage').value),
+                    overall: parseFloat(document.getElementById('overallScore').textContent)
+                },
+
+                // Section 5 - Domains
+                domains: {},
+                pathAllocation: parseInt(document.getElementById('pathAllocation').value),
+
+                // Section 6 - Evening
+                wins: [
+                    document.getElementById('win1').value,
+                    document.getElementById('win2').value,
+                    document.getElementById('win3').value
+                ],
+                improvement: document.getElementById('improvement').value,
+                gratitude: document.getElementById('gratitude').value,
+                tomorrowPriority: document.getElementById('tomorrowPriority').value
+            };
+
+            // Collect schedule entries
+            for (let hour = 6; hour <= 21; hour++) {
+                for (let min = 0; min < 60; min += 30) {
+                    const timeStr = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
+                    const activity = document.getElementById('schedule_' + timeStr).value;
+                    const domain = document.getElementById('domain_' + timeStr).value;
+                    if (activity) {
+                        data.schedule.push({ time: timeStr, activity, domain });
+                    }
+                }
+            }
+
+            // Collect domain checks
+            domains.forEach(domain => {
+                data.domains[domain.id] = {
+                    progress: document.getElementById('domain_' + domain.id).checked,
+                    notes: document.getElementById('domainNotes_' + domain.id).value
+                };
+            });
+
+            return data;
+        }
+
+        // Submit to spreadsheet
+        async function submitToSpreadsheet() {
+            const webAppUrl = localStorage.getItem('webAppUrl');
+            if (!webAppUrl) {
+                showToast('Please configure the Web App URL in Settings first!', true);
+                openSettings();
+                return;
+            }
+
+            const data = collectFormData();
+
+            try {
+                const response = await fetch(webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                showToast('Journal submitted successfully!');
+                saveDraft(); // Save a backup
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error submitting. Data saved locally.', true);
+                saveDraft();
+            }
+        }
+
+        // Save draft to localStorage
+        function saveDraft() {
+            const data = collectFormData();
+            localStorage.setItem('journalDraft', JSON.stringify(data));
+            localStorage.setItem('lastSaved', new Date().toLocaleString());
+            document.getElementById('lastSaved').textContent = new Date().toLocaleString();
+            showToast('Draft saved!');
+        }
+
+        // Load draft from localStorage
+        function loadDraft() {
+            const draft = localStorage.getItem('journalDraft');
+            if (!draft) return;
+
+            try {
+                const data = JSON.parse(draft);
+
+                // Only load if it's from today
+                const today = new Date().toISOString().split('T')[0];
+                if (data.date !== today) return;
+
+                // Load Section 1
+                document.getElementById('todayMessage').value = data.todayMessage || '';
+                document.getElementById('goal1').value = data.goals?.[0] || '';
+                document.getElementById('goal2').value = data.goals?.[1] || '';
+                document.getElementById('goal3').value = data.goals?.[2] || '';
+                document.getElementById('task1').value = data.tasks?.[0]?.text || '';
+                document.getElementById('task2').value = data.tasks?.[1]?.text || '';
+                document.getElementById('task3').value = data.tasks?.[2]?.text || '';
+                document.getElementById('task1Check').checked = data.tasks?.[0]?.completed || false;
+                document.getElementById('task2Check').checked = data.tasks?.[1]?.completed || false;
+                document.getElementById('task3Check').checked = data.tasks?.[2]?.completed || false;
+                document.getElementById('reachOut1').value = data.reachOut?.[0] || '';
+                document.getElementById('reachOut2').value = data.reachOut?.[1] || '';
+                document.getElementById('reachOut3').value = data.reachOut?.[2] || '';
+
+                // Load prompts
+                data.prompts?.forEach((p, i) => {
+                    const el = document.getElementById('prompt' + i);
+                    if (el) el.value = p.response || '';
+                });
+
+                // Load habits
+                if (data.habits) {
+                    ['clarity', 'energy', 'necessity', 'productivity', 'influence', 'courage'].forEach(habit => {
+                        const slider = document.getElementById(habit);
+                        if (slider && data.habits[habit]) {
+                            slider.value = data.habits[habit];
+                            document.getElementById(habit + 'Value').textContent = data.habits[habit];
+                            updateSliderClass(slider);
+                        }
+                    });
+                    updateOverallScore();
+                }
+
+                // Load domains
+                if (data.domains) {
+                    Object.keys(data.domains).forEach(domainId => {
+                        const toggle = document.getElementById('domain_' + domainId);
+                        const notes = document.getElementById('domainNotes_' + domainId);
+                        if (toggle) toggle.checked = data.domains[domainId].progress;
+                        if (notes) notes.value = data.domains[domainId].notes || '';
+                    });
+                }
+
+                // Load path allocation
+                if (data.pathAllocation) {
+                    document.getElementById('pathAllocation').value = data.pathAllocation;
+                    document.getElementById('pathAValue').textContent = data.pathAllocation + '%';
+                    document.getElementById('pathBValue').textContent = (100 - data.pathAllocation) + '%';
+                }
+
+                // Load evening reflection
+                document.getElementById('win1').value = data.wins?.[0] || '';
+                document.getElementById('win2').value = data.wins?.[1] || '';
+                document.getElementById('win3').value = data.wins?.[2] || '';
+                document.getElementById('improvement').value = data.improvement || '';
+                document.getElementById('gratitude').value = data.gratitude || '';
+                document.getElementById('tomorrowPriority').value = data.tomorrowPriority || '';
+
+                // Load schedule
+                data.schedule?.forEach(entry => {
+                    const activityEl = document.getElementById('schedule_' + entry.time);
+                    const domainEl = document.getElementById('domain_' + entry.time);
+                    if (activityEl) activityEl.value = entry.activity;
+                    if (domainEl) domainEl.value = entry.domain;
+                });
+
+                calculateProgress();
+
+                const lastSaved = localStorage.getItem('lastSaved');
+                if (lastSaved) {
+                    document.getElementById('lastSaved').textContent = lastSaved;
+                }
+            } catch (e) {
+                console.error('Error loading draft:', e);
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const data = collectFormData();
+            let text = `TAKEOFF DAILY JOURNAL - ${data.date}\n`;
+            text += `${'='.repeat(50)}\n\n`;
+
+            text += `TODAY'S MESSAGE:\n${data.todayMessage}\n\n`;
+
+            text += `TOP 3 GOALS:\n`;
+            data.goals.forEach((g, i) => text += `${i+1}. ${g}\n`);
+            text += '\n';
+
+            text += `MORNING MINDSET:\n`;
+            data.prompts.forEach((p, i) => {
+                if (p.response) {
+                    text += `${i+1}. ${p.prompt}\n   ${p.response}\n\n`;
+                }
+            });
+
+            text += `HABIT SCORES:\n`;
+            text += `Clarity: ${data.habits.clarity}/10\n`;
+            text += `Energy: ${data.habits.energy}/10\n`;
+            text += `Necessity: ${data.habits.necessity}/10\n`;
+            text += `Productivity: ${data.habits.productivity}/10\n`;
+            text += `Influence: ${data.habits.influence}/10\n`;
+            text += `Courage: ${data.habits.courage}/10\n`;
+            text += `OVERALL: ${data.habits.overall}/10\n\n`;
+
+            text += `3 WINS:\n`;
+            data.wins.forEach((w, i) => text += `${i+1}. ${w}\n`);
+            text += `\nIMPROVEMENT: ${data.improvement}\n`;
+            text += `GRATITUDE: ${data.gratitude}\n`;
+            text += `TOMORROW'S PRIORITY: ${data.tomorrowPriority}\n`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        // Download JSON
+        function downloadJSON() {
+            const data = collectFormData();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `journal_${data.date}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('JSON downloaded!');
+        }
+
+        // Clear form
+        function clearForm() {
+            if (!confirm('Are you sure you want to clear all entries? This cannot be undone.')) return;
+
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+            document.querySelectorAll('input[type="range"]').forEach(el => {
+                el.value = 5;
+                updateSliderClass(el);
+            });
+            document.querySelectorAll('.habit-value').forEach(el => el.textContent = '5');
+            document.getElementById('pathAllocation').value = 70;
+            document.getElementById('pathAValue').textContent = '70%';
+            document.getElementById('pathBValue').textContent = '30%';
+            updateOverallScore();
+            calculateProgress();
+            showToast('Form cleared!');
+        }
+
+        // Settings
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('webAppUrl').value = localStorage.getItem('webAppUrl') || '';
+            document.getElementById('autoSaveInterval').value = localStorage.getItem('autoSaveInterval') || 30;
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function saveSettings() {
+            const webAppUrl = document.getElementById('webAppUrl').value;
+            const interval = document.getElementById('autoSaveInterval').value;
+
+            localStorage.setItem('webAppUrl', webAppUrl);
+            localStorage.setItem('autoSaveInterval', interval);
+
+            closeSettings();
+            showToast('Settings saved!');
+
+            // Restart auto-save with new interval
+            startAutoSave();
+        }
+
+        // Toast notification
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.remove('error');
+            if (isError) toast.classList.add('error');
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-save
+        let autoSaveInterval;
+        function startAutoSave() {
+            if (autoSaveInterval) clearInterval(autoSaveInterval);
+            const interval = (parseInt(localStorage.getItem('autoSaveInterval')) || 30) * 1000;
+            autoSaveInterval = setInterval(() => {
+                saveDraft();
+            }, interval);
+        }
+
+        // Track input changes for progress
+        function trackProgress() {
+            document.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('input', calculateProgress);
+            });
+        }
+
+        // ============================================
+        // YESTERDAY'S REFLECTION FUNCTIONS
+        // ============================================
+
+        let yesterdayData = null;
+
+        // Check for incomplete yesterday entry
+        function checkYesterdayReflection() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            const draft = localStorage.getItem('journalDraft_' + yesterdayStr);
+            const dismissed = localStorage.getItem('yesterdayDismissed_' + yesterdayStr);
+
+            if (dismissed) return; // User already dismissed
+
+            if (draft) {
+                try {
+                    yesterdayData = JSON.parse(draft);
+                    // Check if evening reflection is incomplete
+                    if (!yesterdayData.wins?.[0] && !yesterdayData.habits?.clarity) {
+                        showYesterdayBanner(yesterday);
+                    }
+                } catch (e) {
+                    console.error('Error parsing yesterday draft:', e);
+                }
+            } else {
+                // Check if there's a today draft from yesterday (old format)
+                const oldDraft = localStorage.getItem('journalDraft');
+                if (oldDraft) {
+                    try {
+                        const data = JSON.parse(oldDraft);
+                        if (data.date === yesterdayStr && !data.wins?.[0]) {
+                            yesterdayData = data;
+                            showYesterdayBanner(yesterday);
+                        }
+                    } catch (e) {}
+                }
+            }
+        }
+
+        // Show the yesterday banner
+        function showYesterdayBanner(date) {
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('yesterdayDate').textContent = date.toLocaleDateString('en-US', options);
+            document.getElementById('yesterdayBanner').style.display = 'block';
+        }
+
+        // Open yesterday's reflection modal
+        function openYesterdayModal() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('yesterdayModalDate').textContent = yesterday.toLocaleDateString('en-US', options);
+
+            // Initialize yesterday's habit sliders
+            const yHabits = ['yClarity', 'yEnergy', 'yNecessity', 'yProductivity', 'yInfluence', 'yCourage'];
+            yHabits.forEach(habit => {
+                const slider = document.getElementById(habit);
+                const valueDisplay = document.getElementById(habit + 'Value');
+
+                slider.addEventListener('input', function() {
+                    valueDisplay.textContent = this.value;
+                    updateSliderClass(this);
+                });
+
+                updateSliderClass(slider);
+            });
+
+            // Load any existing data from yesterday
+            if (yesterdayData) {
+                if (yesterdayData.wins) {
+                    document.getElementById('yWin1').value = yesterdayData.wins[0] || '';
+                    document.getElementById('yWin2').value = yesterdayData.wins[1] || '';
+                    document.getElementById('yWin3').value = yesterdayData.wins[2] || '';
+                }
+                document.getElementById('yImprovement').value = yesterdayData.improvement || '';
+                document.getElementById('yGratitude').value = yesterdayData.gratitude || '';
+            }
+
+            document.getElementById('yesterdayModal').classList.add('active');
+        }
+
+        // Close yesterday's modal
+        function closeYesterdayModal() {
+            document.getElementById('yesterdayModal').classList.remove('active');
+        }
+
+        // Dismiss yesterday's banner
+        function dismissYesterday() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            localStorage.setItem('yesterdayDismissed_' + yesterdayStr, 'true');
+            document.getElementById('yesterdayBanner').style.display = 'none';
+        }
+
+        // Submit yesterday's reflection
+        async function submitYesterdayReflection() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            // Build yesterday's data
+            const data = yesterdayData || {
+                date: yesterdayStr,
+                dayOfWeek: yesterday.toLocaleDateString('en-US', { weekday: 'long' }),
+                weekNumber: getWeekNumber(yesterday),
+                quarter: 'Q' + Math.ceil((yesterday.getMonth() + 1) / 3)
+            };
+
+            // Add evening reflection data
+            data.wins = [
+                document.getElementById('yWin1').value,
+                document.getElementById('yWin2').value,
+                document.getElementById('yWin3').value
+            ];
+            data.improvement = document.getElementById('yImprovement').value;
+            data.gratitude = document.getElementById('yGratitude').value;
+
+            // Add habit scores
+            data.habits = {
+                clarity: parseInt(document.getElementById('yClarity').value),
+                energy: parseInt(document.getElementById('yEnergy').value),
+                necessity: parseInt(document.getElementById('yNecessity').value),
+                productivity: parseInt(document.getElementById('yProductivity').value),
+                influence: parseInt(document.getElementById('yInfluence').value),
+                courage: parseInt(document.getElementById('yCourage').value)
+            };
+            data.habits.overall = (
+                data.habits.clarity + data.habits.energy + data.habits.necessity +
+                data.habits.productivity + data.habits.influence + data.habits.courage
+            ) / 6;
+
+            data.timestamp = new Date().toISOString();
+
+            // Submit to spreadsheet
+            const webAppUrl = localStorage.getItem('webAppUrl');
+            if (webAppUrl) {
+                try {
+                    await fetch(webAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    showToast('Yesterday\'s reflection submitted!');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('Error submitting. Saved locally.', true);
+                }
+            } else {
+                showToast('Configure Web App URL in Settings to sync.', true);
+            }
+
+            // Save locally
+            localStorage.setItem('journalDraft_' + yesterdayStr, JSON.stringify(data));
+
+            // Hide banner and modal
+            dismissYesterday();
+            closeYesterdayModal();
+        }
+
+        // Helper: Get week number
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // Modified saveDraft to save with date key
+        const originalSaveDraft = saveDraft;
+        saveDraft = function() {
+            const data = collectFormData();
+            // Save with date-specific key
+            localStorage.setItem('journalDraft_' + data.date, JSON.stringify(data));
+            // Also save as current draft for backward compatibility
+            localStorage.setItem('journalDraft', JSON.stringify(data));
+            localStorage.setItem('lastSaved', new Date().toLocaleString());
+            document.getElementById('lastSaved').textContent = new Date().toLocaleString();
+            showToast('Draft saved!');
+        };
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initDateInfo();
+            initPrompts();
+            initSchedule();
+            initDomainChecks();
+            initHabitSliders();
+            initPathSlider();
+            loadDraft();
+            trackProgress();
+            calculateProgress();
+            startAutoSave();
+            checkYesterdayReflection(); // Check for incomplete yesterday
+            registerServiceWorker(); // Register PWA service worker
+        });
+
+        // ============================================
+        // PWA SERVICE WORKER REGISTRATION
+        // ============================================
+
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('./service-worker.js');
+                    console.log('Service Worker registered:', registration.scope);
+
+                    // Check for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New version available
+                                showUpdateNotification();
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('Service Worker registration failed:', error);
+                }
+            }
+        }
+
+        // Show notification when app update is available
+        function showUpdateNotification() {
+            const updateBanner = document.createElement('div');
+            updateBanner.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--accent-gold);
+                color: var(--bg-primary);
+                padding: 15px 25px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                z-index: 1002;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            updateBanner.innerHTML = `
+                <span>New version available!</span>
+                <button onclick="location.reload()" style="
+                    background: var(--bg-primary);
+                    color: var(--accent-gold);
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">Update</button>
+            `;
+            document.body.appendChild(updateBanner);
+        }
+
+        // Handle PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            // Add install button to footer if not already installed
+            const footerButtons = document.querySelector('.footer-buttons');
+            if (footerButtons && !document.getElementById('installBtn')) {
+                const installBtn = document.createElement('button');
+                installBtn.id = 'installBtn';
+                installBtn.className = 'btn btn-primary';
+                installBtn.innerHTML = 'Install App';
+                installBtn.onclick = installApp;
+                footerButtons.insertBefore(installBtn, footerButtons.firstChild);
+            }
+        }
+
+        async function installApp() {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+
+            if (outcome === 'accepted') {
+                showToast('App installed! Find TAKEOFF on your home screen.');
+                document.getElementById('installBtn')?.remove();
+            }
+
+            deferredPrompt = null;
+        }
+
+        // Detect if running as installed PWA
+        function isPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+
+        if (isPWA()) {
+            console.log('Running as installed PWA');
+        }
+    </script>
+</body>
+</html>
